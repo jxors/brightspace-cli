@@ -32,6 +32,21 @@ The following verbs are avaiable (`brightspace-cli <verb> <arguments>`):
   version             Display version information.
 ```
 
+# Authentication
+The Brightspace API is built for webapps, some magic is needed to make it work for a CLI tool. First, run
+
+```
+brightspace-cli auth
+```
+
+to get an authentication URL. Open this URL in your favorite webbrowser, and log in. After logging in, you'll be redirected to a page that **does not exist.** Copy the URL of this page, and run:
+
+```
+brightspace-cli auth --url <URL>
+```
+
+to finish the authentication sequence.
+
 # Building
 This tool needs at least .NET core to build, which can be downloaded for Windows, Linux or Mac from [here](https://www.microsoft.com/net/download). If you're running Windows, you might want to install Visual Studio instead.
 
