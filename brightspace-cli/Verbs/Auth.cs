@@ -13,13 +13,14 @@ namespace BrightspaceCli.Verbs
 
         public override async Task ExecuteAsync(Context context, TextWriter writer)
         {
-            if (Url != null)
+            if (!string.IsNullOrWhiteSpace(Url))
             {
                 await context.SetAuthenticationData(new Uri(Url));
                 await writer.WriteLineAsync("Authentication data saved");
             }
             else
             {
+                await writer.WriteLineAsync($"Fetching authentication URL...");
                 var authUrl = context.GetAuthenticationUri();
 
                 await writer.WriteLineAsync($"Please authenticate on this URL: {authUrl}");

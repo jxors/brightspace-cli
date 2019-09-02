@@ -48,7 +48,7 @@ namespace BrightspaceCli
 
             authenticator.Authenticate(Client, request);
 
-            await Client.ExecuteTaskAsync<T>(request);
+            await Client.ExecuteTaskAsync(request);
         }
 
         public async Task<T> Request<T>(string route) where T : new()
@@ -57,10 +57,18 @@ namespace BrightspaceCli
             var request = new RestRequest(route);
 
             authenticator.Authenticate(Client, request);
+            var response = await Client.ExecuteTaskAsync(request);
+            if ((int)response.StatusCode < 200 || (int)response.StatusCode > 299)
+            {
+                throw new Exception(response.Content);
+            }
 
-            var response = await Client.ExecuteTaskAsync<T>(request);
-
-            return response.Data;
+            try {
+                return new RestSharp.Deserializers.JsonDeserializer().Deserialize<T>(response);
+            } catch (System.Xml.XmlException)
+            {
+                throw new Exception(response.Content);
+            }
         }
 
         public async Task SetAuthenticationData(Uri url)
